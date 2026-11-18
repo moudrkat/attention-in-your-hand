@@ -6,9 +6,9 @@ Everybody draws attention as a heatmap. I wanted one I could pick up.
 
 A 4-million-parameter language model runs on an ESP32-S3 and writes small programs. While it writes, 64 LEDs show
 one of its attention heads, live: which earlier tokens the model is looking at for the token it is writing now.
-No laptop in the loop. The whole thing fits in a palm, and it is warm.
+No laptop in the loop. The whole thing fits in a palm.
 
-(Strictly: you hold what one head is paying attention to. The head itself is 0.3 % of the weights and stays in the flash.)
+(Strictly: you hold what one head is paying attention to. The head itself is 0.6 % of the weights and stays in the flash.)
 
 ## How to read the square
 
@@ -45,8 +45,7 @@ it gives every earlier token a share of its attention, and the shares add up to 
 | screen `VCC`, `GND` | `3V3`, `GND` |
 | screen `SDA`, `SCL` | pins `18`, `8` |
 
-The square has two sets of pads. Solder to `IN`. `OUT` is where the data leaves, and nothing lights up if you
-start there. Do not ask how I know.
+The square has two sets of pads. Solder to `IN`. `OUT` is where the data leaves.
 
 **Flash**
 
@@ -77,18 +76,16 @@ MODEL=path/to/folder REQUESTS="The temperature of a body is|Heat is" ./flash.sh
 ```
 
 The folder holds `model.bin` and `tokenizer.json`. Tried with one other model, the one from
-[maxwell-on-a-chip](https://github.com/moudrkat/maxwell-on-a-chip): it wrote about heat at 4.6 tokens a second and
-its heads lit up. Which of its heads is worth holding, I have not looked. Press BOOT.
+[maxwell-on-a-chip](https://github.com/moudrkat/maxwell-on-a-chip): it wrote about heat at 4.6 tokens a second.
+Which of its heads is worth holding, I have not looked. Press BOOT.
 
 ## How it works
 
 - For every token and every head, the runtime computes a row of weights, uses it, and throws it away.
-  `runtime/attention.h` keeps the row of one head. It is 30 lines.
-- The last 8 rows are the square. `firmware/attention/leds.h` draws it, brightness = square root of the weight.
-- The frame goes out through SPI with DMA, in one piece. This is the fourth LED driver. The first three worked
-  perfectly on a picture that stands still and fell apart the moment the model started thinking: full white rows,
-  random colours. The LEDs want pulses of 0.3 and 0.9 millionths of a second, and a chip that is busy running a
-  language model is late for some of them.
+  `runtime/attention.h` keeps the row of one head. The last 8 rows are the square.
+- `firmware/attention/leds.h` draws it. This is the fourth LED driver. The first three were perfect on a picture
+  that stands still and fell apart when the model started writing: rows of full white, random colours. The LEDs
+  want pulses of 0.3 and 0.9 millionths of a second, and a chip busy with a language model is late for some of them.
 
 ## Small print
 
@@ -97,7 +94,7 @@ its heads lit up. Which of its heads is worth holding, I have not looked. Press 
   mostly further back than the square reaches, and would show a few faint dots.
 - I know where this head looks (2 to 4 tokens back, mostly). I do not know what it is for.
 - A faint cell comes out red instead of orange: at that brightness the green part rounds down to nothing.
-- About 4 tokens a second. The LEDs cost nothing you would notice.
+- About 4 tokens a second.
 - Built and run on one board, in one day. If your square shows something else, I would like to see it.
 
 ## Thanks
