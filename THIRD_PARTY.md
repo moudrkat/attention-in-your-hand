@@ -1,9 +1,9 @@
 # Code from other projects
 
-`runtime/`, `firmware/maxwell/` (apart from `room_temp.h` and the ROOM_TEMPERATURE parts of `maxwell.ino`), `train/`
-and `tools/` come from [esp32-ai](https://github.com/moudrkat/esp32-ai), which builds on Viacheslav Sierbov's
+`runtime/llm.h`, `runtime/bpe_tokenizer.h`, `tools/`, the screen code and the parts of `attention.ino` that load and run the
+model come from [esp32-ai](https://github.com/moudrkat/esp32-ai), which builds on Viacheslav Sierbov's
 [slvDev/esp32-ai](https://github.com/slvDev/esp32-ai): the runtime that runs a language model on this chip in the first
-place. Without it, Maxwell would have nowhere to live. MIT licence:
+place. Without it there would be no head to hold. MIT licence:
 
 ```
 MIT License

@@ -1,9 +1,9 @@
-"""Type requests to the board running the oled model; its replies print as they come.
+"""Type to the board; what it writes prints as it comes.
 
-    uv run --no-project --with pyserial python scripts/oled_talk.py [/dev/ttyACM0]
+    python talk.py [/dev/ttyACM0]        (pip install pyserial)
 
-Each line you type (draw a house, countdown from 5 then happy birthday, ...) is sent with a newline; the board
-writes the program on its screen and runs it. Ctrl+C to quit.
+A line is a request for the model (draw a house). "@head 3 4" shows layer 3, head 4 on the LEDs, "@head" the next
+one, "@tri" the test triangle. Ctrl+C to quit.
 """
 import sys
 import threading
@@ -23,7 +23,7 @@ def read():
 
 
 threading.Thread(target=read, daemon=True).start()
-print(f"connected to {port}; type what to draw, Enter to send, Ctrl+C to quit")
+print(f"connected to {port}; type a request, Enter to send, Ctrl+C to quit")
 try:
     while True:
         line = input()

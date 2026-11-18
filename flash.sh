@@ -19,8 +19,8 @@ if [ -n "${MODEL:-}" ]; then
   [ -f "$MODEL/model.bin" ] && [ -f "$MODEL/tokenizer.json" ] || { echo "$MODEL needs model.bin and tokenizer.json"; exit 1; }
   [ -n "${REQUESTS:-}" ] || { echo 'say what to ask it: REQUESTS="first request|second request"'; exit 1; }
   echo "=== model from $MODEL"
-  python3 tools/generate_vocab.py --tokenizer "$MODEL/tokenizer.json" --out $GEN/vocab.h | tail -1
-  python3 tools/generate_tokenizer_header.py --tokenizer "$MODEL/tokenizer.json" --out $GEN/tokenizer_encoder.h | tail -1
+  python3 tools/generate_vocab.py --tokenizer "$MODEL/tokenizer.json" --out $GEN/vocab.h
+  python3 tools/generate_tokenizer_header.py --tokenizer "$MODEL/tokenizer.json" --out $GEN/tokenizer_encoder.h > /dev/null
   LIST=$(printf '%s' "$REQUESTS" | sed 's/\\/\\\\/g; s/"/\\"/g; s/|/", "/g')
   printf '// Written by flash.sh for %s\n#define PROMPT_PREFIX "%s"\n#define PROMPT_SUFFIX "%s"\n#define REQUEST_LIST "%s"\n' \
     "$MODEL" "${PREFIX:-}" "${SUFFIX:-}" "$LIST" > $GEN/prompt_format.h
